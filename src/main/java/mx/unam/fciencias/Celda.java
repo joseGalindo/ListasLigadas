@@ -12,6 +12,8 @@ public class Celda<T> {
 
     public Celda(T valor) {
         this.valor = valor;
+        this.siguiente = null;
+        this.anterior = null;
     }
 
     public T getValor() {
