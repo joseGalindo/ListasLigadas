@@ -1,8 +1,12 @@
 package mx.unam.fciencias;
 
+import java.util.Comparator;
+import mx.unam.fciencias.definition.Lista;
+
 /**
  *
  * @author José Cruz Galindo Martínez
+ * @param <T> El tipo de datos con el que trabajará la lista.
  */
 public class ListaLigada<T> implements Lista<T> {
 
@@ -14,8 +18,13 @@ public class ListaLigada<T> implements Lista<T> {
         tamano = 0;
     }
 
+    public ListaLigada(Comparator<T> unComparador) {
+        inicio = null;
+        tamano = 0;
+    }
+
     public boolean esVacia() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return inicio == null;
     }
 
     public int longitud() {
@@ -23,7 +32,29 @@ public class ListaLigada<T> implements Lista<T> {
     }
 
     public void eliminar(T elemento) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Celda<T> tmp = inicio;
+        Celda<T> precedente = inicio;
+        boolean hecho = false;
+        if (inicio.getValor().equals(elemento)) {
+            inicio = inicio.getSiguiente();
+            hecho = true;
+            tamano--;
+        } else {
+            tmp = tmp.getSiguiente();
+            while (tmp != null) {
+                if (tmp.getValor().equals(elemento)) {
+                    precedente.setSiguiente(tmp.getSiguiente());
+                    hecho = true;
+                    tamano--;
+                    break;
+                }
+                precedente = tmp;
+                tmp = tmp.getSiguiente();
+            }
+        }
+        if (!hecho) {
+            System.out.println("No se elimino nada.");
+        } 
     }
 
     public void agregar(T elemento) {
@@ -41,8 +72,23 @@ public class ListaLigada<T> implements Lista<T> {
         ++tamano;
     }
 
+    public void agregarInicio(T elemento) {
+        Celda<T> nuevaCelda = new Celda<T>(elemento);
+        nuevaCelda.setSiguiente(inicio);
+        inicio = nuevaCelda;
+        tamano++;
+    }
+    
+    
+
     public boolean contiene(T elemento) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Celda<T> tmp = inicio;
+        while (tmp != null) {
+            if (tmp.getValor().equals(elemento)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public T obtener(int posicion) throws IndexOutOfBoundsException {
@@ -60,15 +106,14 @@ public class ListaLigada<T> implements Lista<T> {
             // Estoy en la ultima posicion
             return tmp.getValor();
         }
-        
         throw new IndexOutOfBoundsException("La lista no es tan larga");
-//        return null;
     }
 
     public void limpiar() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        inicio = null;
     }
-    
+
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("[");
@@ -80,7 +125,7 @@ public class ListaLigada<T> implements Lista<T> {
             tmp = tmp.getSiguiente();
         }
         sb.append(tmp.getValor());
-        sb.append("]");
+        sb.append(" ]");
         return sb.toString();
     }
 
